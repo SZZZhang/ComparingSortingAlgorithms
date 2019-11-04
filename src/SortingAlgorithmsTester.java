@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class SortingAlgorithmsTester {
     static int[] arr;
-    static int[] nExponents = new int[]{4, 7, 10, 13, 16, 19, 21};
+    static int[] nExponents = new int[]{4, 7, 10, 13, 16, 19};
     static int nBase = 2;
     static double nanosecToSec = 1E9;
 
@@ -23,29 +23,20 @@ public class SortingAlgorithmsTester {
             return list;
 
         } catch (FileNotFoundException e) {
-            System.out.println("File was not found :(: " + fileName);
+            System.out.println("File was not found :( : " + fileName);
         }
         return new int[]{};
     }
 
-    static void testSort(String file) {
-        IntegerSorter sorter = new IntegerSorter();
-        sorter.setList(
-                readArray(file,
-                        (int) Math.pow(2, 18)));
-
-        int defaultSortedArray[] = Arrays.copyOf(arr, (int) Math.pow(2, 18));
-
-        long startTime = System.nanoTime();
-        sorter.sort(3);
-        long time = System.nanoTime() - startTime;
-
-        System.out.println((double) time / 1E9);
-
+    static void checkSort(int[] defaultSortedArray, int[] customsortedArray) {
         //checks if sorting algorithm worked
         Arrays.sort(defaultSortedArray);
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != defaultSortedArray[i]) {
+        for (int i = 0; i < customsortedArray.length; i++) {
+            if (customsortedArray[i] != defaultSortedArray[i]) {
+                for(int j = 0; j < customsortedArray.length; j++) {
+                    System.out.println(customsortedArray[j] + " " + defaultSortedArray[j]);
+                }
+
                 throw new RuntimeException("This array is NOT sorted. What the heck.");
             }
         }
@@ -63,9 +54,16 @@ public class SortingAlgorithmsTester {
                                         + nExponents[i] + ".txt", (int) Math.pow(nBase, nExponents[i]))
                 );
 
+                int defaultSortedArray[] = Arrays.copyOf(sorter.getList(), sorter.getList().length);
+                Arrays.sort(defaultSortedArray);
+
                 long startTime = System.nanoTime();
                 sorter.sort(type);
                 long time = System.nanoTime() - startTime;
+
+                checkSort(defaultSortedArray, sorter.getList());
+
+                System.out.println((double) time/nanosecToSec + ",");
 
                 writer.write((double) time / nanosecToSec + ", ");
             }
@@ -79,7 +77,7 @@ public class SortingAlgorithmsTester {
             File file = new File("output.csv");
             PrintWriter writer = new PrintWriter(file);
 
-            threeTrials(writer, 3);
+            threeTrials(writer, 1);
             writer.flush();
             writer.close();
         } catch (IOException e) {
@@ -88,18 +86,10 @@ public class SortingAlgorithmsTester {
 
     }
 
-    static void testOutput() {
-        try {
-            File file = new File("output.csv");
-            PrintWriter writer = new PrintWriter(file);
-            writer.write("asfdhadfsuafsdjasdfafsdjafsdjfsd,");
-            writer.flush();
-            writer.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("FIle not found");
-        }
-
-
+    static void testToString() {
+        IntegerSorter sorter = new IntegerSorter();
+        sorter.setList(new int[] {2, 3, 4});
+        System.out.println(sorter.toString());
     }
 
     public static void main(String[] args) {

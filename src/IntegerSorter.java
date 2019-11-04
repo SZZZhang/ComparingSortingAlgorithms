@@ -5,8 +5,15 @@ public class IntegerSorter implements Sorter{
 
     private int[] arr;
 
+    public String toString() {
+        String arrString = "";
+        for (int i = 0; i < arr.length; i++) {
+            arrString += arr[i] + ", ";
+        }
+        return arrString;
+    }
     public static void sort_method1(int[] arr) {
-        for (int i = arr.length - 1; i > 1; i--) {
+        for (int i = arr.length - 1; i > 0; i--) {
             for (int j = 0; j < i; j++) {
                 if (arr[j] > arr[j + 1]) {
                     int temp = arr[j + 1];
