@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 public class SortingAlgorithmsTester {
     static int[] arr;
-    static int[] nExponents = new int[]{4, 7, 10, 13, 16, 19};
+    static int[] nExponents1 = new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+    static int[] nExponents = new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12};
     static int nBase = 2;
     static double nanosecToSec = 1E9;
 
@@ -19,7 +20,7 @@ public class SortingAlgorithmsTester {
                 list[index] = scan.nextInt();
                 index++;
             }
-
+            scan.close();
             return list;
 
         } catch (FileNotFoundException e) {
@@ -28,13 +29,13 @@ public class SortingAlgorithmsTester {
         return new int[]{};
     }
 
-    static void checkSort(int[] defaultSortedArray, int[] customsortedArray) {
+    static void checkSort(int[] defaultSortedArray, int[] customSortedArray) {
         //checks if sorting algorithm worked
         Arrays.sort(defaultSortedArray);
-        for (int i = 0; i < customsortedArray.length; i++) {
-            if (customsortedArray[i] != defaultSortedArray[i]) {
-                for(int j = 0; j < customsortedArray.length; j++) {
-                    System.out.println(customsortedArray[j] + " " + defaultSortedArray[j]);
+        for (int i = 0; i < customSortedArray.length; i++) {
+            if (customSortedArray[i] != defaultSortedArray[i]) {
+                for (int j = 0; j < customSortedArray.length; j++) {
+                    System.out.println(customSortedArray[j] + " " + defaultSortedArray[j]);
                 }
 
                 throw new RuntimeException("This array is NOT sorted. What the heck.");
@@ -46,7 +47,7 @@ public class SortingAlgorithmsTester {
 
         IntegerSorter sorter = new IntegerSorter();
 
-        for (int test = 0; test < 3; test++) {
+        for (int test = 0; test < 7; test++) {
             for (int i = 0; i < nExponents.length; i++) {
                 sorter.setList(
                         readArray(
@@ -63,10 +64,11 @@ public class SortingAlgorithmsTester {
 
                 checkSort(defaultSortedArray, sorter.getList());
 
-                System.out.println((double) time/nanosecToSec + ",");
+                System.out.print((double) time / nanosecToSec + ",");
 
                 writer.write((double) time / nanosecToSec + ", ");
             }
+            System.out.println();
             writer.write("\n");
         }
     }
@@ -77,7 +79,7 @@ public class SortingAlgorithmsTester {
             File file = new File("output.csv");
             PrintWriter writer = new PrintWriter(file);
 
-            threeTrials(writer, 1);
+            threeTrials(writer, 3);
             writer.flush();
             writer.close();
         } catch (IOException e) {
@@ -86,10 +88,43 @@ public class SortingAlgorithmsTester {
 
     }
 
+    static void testOneMethod() {
+        IntegerSorter sorter = new IntegerSorter();
+
+        sorter.setList(
+                readArray(
+                        "/Users/shirleyzhang/Desktop/ics4u/ComparingSortingAlgorithms/src/TestFiles/2power"
+                                + 19 + ".txt", (int) Math.pow(nBase, 19)
+                ));
+
+        int defaultSortedArray[] = Arrays.copyOf(sorter.getList(), sorter.getList().length);
+        Arrays.sort(defaultSortedArray);
+
+        long startTime = System.nanoTime();
+        sorter.sort(2);
+        long time = System.nanoTime() - startTime;
+
+        checkSort(defaultSortedArray, sorter.getList());
+
+        System.out.println((double) time / nanosecToSec + ",");
+    }
+
     static void testToString() {
         IntegerSorter sorter = new IntegerSorter();
-        sorter.setList(new int[] {2, 3, 4});
+        sorter.setList(readArray("/Users/shirleyzhang/Desktop/ics4u/ComparingSortingAlgorithms/src/TestFiles/2power"
+                + 19 + ".txt", (int) Math.pow(nBase, 19)));
+        sorter.sort_method3(0, sorter.getList().length);
         System.out.println(sorter.toString());
+    }
+
+    static void testTimer() {
+        long prevtime = System.nanoTime();
+        for (int i = 0; i < 8; i++) {
+            long curtime = System.nanoTime() - prevtime;
+
+            prevtime = System.nanoTime();
+            System.out.println(curtime);
+        }
     }
 
     public static void main(String[] args) {

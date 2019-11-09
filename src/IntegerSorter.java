@@ -1,96 +1,99 @@
 import java.io.File;
 import java.util.Arrays;
 
-public class IntegerSorter implements Sorter{
+public class IntegerSorter implements Sorter {
 
-    private int[] arr;
+    private int[] list;
 
+    @Override
     public String toString() {
-        String arrString = "";
-        for (int i = 0; i < arr.length; i++) {
-            arrString += arr[i] + ", ";
+        String str = "";
+        for (int i = 0; i < list.length; i++) {
+            str += (list[i] + ", ");
         }
-        return arrString;
+        return str;
     }
-    public static void sort_method1(int[] arr) {
-        for (int i = arr.length - 1; i > 0; i--) {
+
+    //sorts array
+    public void sort_method1() {
+        for (int i = list.length - 1; i > 0; i--) {
             for (int j = 0; j < i; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    int temp = arr[j + 1];
-                    arr[j + 1] = arr[j];
-                    arr[j] = temp;
+                if (list[j] > list[j + 1]) {
+                    int temp = list[j + 1];
+                    list[j + 1] = list[j];
+                    list[j] = temp;
                 }
             }
         }
     }
 
-    public static void sort_method2(int[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            for (int j = i + 1; j < arr.length; j++) {
-                if (arr[i] > arr[j]) {
-                    int temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
+    public void sort_method2() {
+        for (int i = 0; i < list.length - 1; i++) {
+            for (int j = i + 1; j < list.length; j++) {
+                if (list[i] > list[j]) {
+                    int temp = list[i];
+                    list[i] = list[j];
+                    list[j] = temp;
                 }
             }
         }
     }
 
-     public static void sort_method3(int arr[], int st, int end) {
+    //sorts the list, from the start index(inclusive) to the end index(exclusive)
+    public void sort_method3(int st, int end) {
         if (st == end - 1) return;
 
-        sort_method3(arr, st, (end + st) / 2);
-        sort_method3(arr, (end + st) / 2, end);
+        sort_method3(st, (end + st) / 2);
+        sort_method3((end + st) / 2, end);
 
-        int copiedArr1[] = Arrays.copyOfRange(arr, st, (end + st) / 2);
-        int copiedArr2[] = Arrays.copyOfRange(arr, (end + st) / 2, end);
+        int[] arr1 = Arrays.copyOfRange(list, st, (end + st) / 2);
+        int[] arr2 = Arrays.copyOfRange(list, (end + st) / 2, end);
 
-        int pt1 = 0, pt2 = 0;
-        for (int i = st; i < end; i++) {
-            if (copiedArr1[pt1] < copiedArr2[pt2]) {
-                arr[i] = copiedArr1[pt1];
+        int pt1 = 0, pt2 = 0, index = st;
+        while (pt1 < arr1.length && pt2 < arr2.length) {
+            if (arr1[pt1] < arr2[pt2]) {
+                list[index] = arr1[pt1];
                 pt1++;
             } else {
-                arr[i] = copiedArr2[pt2];
+                list[index] = arr2[pt2];
                 pt2++;
             }
-            if (pt1 >= copiedArr1.length) {
-                for (int arrIndex = ++i, j = pt2; j < copiedArr2.length; arrIndex++, j++) {
-                    arr[arrIndex] = copiedArr2[j];
-                }
-                break;
+            index++;
+        }
+        if (pt1 >= arr1.length) {
+            for (int copyIndex = index, j = pt2; j < arr2.length; copyIndex++, j++) {
+                list[copyIndex] = arr2[j];
             }
-
-            if (pt2 >= copiedArr2.length) {
-                for (int arrIndex = ++i, j = pt1; j < copiedArr1.length; arrIndex++, j++) {
-                    arr[arrIndex] = copiedArr1[j];
-                }
-                break;
+        }
+        if (pt2 >= arr2.length) {
+            for (int copyIndex = index, j = pt1; j < arr1.length; copyIndex++, j++) {
+                list[copyIndex] = arr1[j];
             }
         }
     }
+
 
     @Override
     public void setList(int[] list) {
-        this.arr = list;
+        this.list = list;
     }
 
     @Override
     public int[] getList() {
-        return arr;
+        return list;
     }
 
     @Override
     public void sort(int type) {
-        switch (type){
+        switch (type) {
             case 1:
-                sort_method1(arr);
+                sort_method1();
                 break;
             case 2:
-                sort_method2(arr);
+                sort_method2();
                 break;
             case 3:
-                sort_method3(arr, 0, arr.length);
+                sort_method3(0, list.length);
                 break;
         }
     }
